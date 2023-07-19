@@ -1,9 +1,11 @@
 import networkx as nx
+import os
 from remove_cycle_edges_by_hierarchy_greedy import scc_based_to_remove_cycle_edges_iterately
 from remove_cycle_edges_by_hierarchy_BF import remove_cycle_edges_BF_iterately
 from remove_cycle_edges_by_hierarchy_voting import remove_cycle_edges_heuristic
 from measures import F1
 from file_io import read_dict_from_file
+from file_io import write_dict_to_txt
 from file_io import write_pairs_to_file
 	
 def get_edges_voting_scores(set_edges_list):
@@ -94,10 +96,18 @@ def breaking_cycles_by_hierarchy_performance(graph_file,gt_file,players_score_na
 	
 	from measures import report_performance
 	if players_score_name != "ensembling":
+		graph_file_name = str(graph_file).split("/")[-1]
+		output_location = "/tmp/cycle-breaking/" + graph_file_name + "/pr"
+		os.makedirs(output_location)
 		players_score_dict  = computing_hierarchy(graph_file,players_score_name,nodetype = nodetype)
+		write_dict_to_txt(players_score_dict,output_location + "scores")
 		e1,e2,e3,e4 = remove_cycle_edges_by_hierarchy(graph_file,players_score_dict,players_score_name,nodetype = nodetype)
 		
 		if players_score_name == "pagerank":
+			write_pairs_to_file(e1,output_location + "/edges_to_remove1")
+			write_pairs_to_file(e2,output_location + "/edges_to_remove2")
+			write_pairs_to_file(e3,output_location + "/edges_to_remove3")
+			write_pairs_to_file(e4,output_location + "/edges_to_remove4")
 			report_performance(gt_file,e1,"PR")
 			return
 
@@ -116,6 +126,7 @@ def breaking_cycles_by_hierarchy_performance(graph_file,gt_file,players_score_na
 		report_performance(gt_file,e1,  "SA_G")
 		write_pairs_to_file(e1,graph_file[:len(graph_file)-6] + "_removed_by_SA-G.edges")
 		report_performance(gt_file,e2,  "SA_F")
+
 		write_pairs_to_file(e2,graph_file[:len(graph_file)-6] + "_removed_by_SA-F.edges")
 		report_performance(gt_file,e3,  "SA_B")
 		write_pairs_to_file(e3,graph_file[:len(graph_file)-6] + "_removed_by_SA-B.edges")
