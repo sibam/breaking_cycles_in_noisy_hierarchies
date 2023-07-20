@@ -100,7 +100,7 @@ def breaking_cycles_by_hierarchy_performance(graph_file,gt_file,players_score_na
 		output_location = "/tmp/cycle-breaking/" + graph_file_name + "/pr"
 		os.makedirs(output_location)
 		players_score_dict  = computing_hierarchy(graph_file,players_score_name,nodetype = nodetype)
-		write_dict_to_txt(players_score_dict,output_location + "scores")
+		write_dict_to_txt(players_score_dict,output_location + "/scores")
 		e1,e2,e3,e4 = remove_cycle_edges_by_hierarchy(graph_file,players_score_dict,players_score_name,nodetype = nodetype)
 		
 		if players_score_name == "pagerank":
