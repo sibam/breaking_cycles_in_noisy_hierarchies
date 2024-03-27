@@ -30,7 +30,7 @@ def write_set_to_txt(output,output_file):
 
 def write_dict_to_txt(output,output_file):
 	with open(output_file,"w") as f:
-		for k,v in output.iteritems():
+		for k,v in output.items():
 			f.write(str(k) + " " + str(v) + " \n")
 
 
